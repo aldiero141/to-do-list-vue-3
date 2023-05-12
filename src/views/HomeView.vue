@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col w-full h-screen justify-center items-center">
+  <main class="flex flex-col w-full h-screen items-center">
     <OTodoList />
   </main>
 </template>

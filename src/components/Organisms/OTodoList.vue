@@ -2,7 +2,7 @@
   <div class="flex flex-col w-[40vw] h-screen bg-gray-50 justify-center p-8">
     <ACard>
       <MTodosInput v-model="todo" @on:enter="addTask" @on:click="addTask" />
-      <MTodosFilter />
+      <MTodosFilter :statuses="status" @on:change="sortTask" />
       <MTodosTasks
         :todos="todos"
         @on:label-click="toggleStatus"
@@ -24,7 +24,9 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 
 const todo = ref("");
+
 const store = useTodosStore();
+const status = ["done", "pending"];
 const { todos } = storeToRefs(store);
 const addTask = (): void => {
   const new_task: ITask = {
@@ -42,6 +44,10 @@ const removeTask = (id: number): void => {
 
 const toggleStatus = (id: number): void => {
   store.setStatus(id);
+};
+
+const sortTask = (status: string) => {
+  store.sortTaskByStatus(status);
 };
 
 store.initTask();

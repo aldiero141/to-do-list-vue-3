@@ -42,5 +42,38 @@ export const useTodosStore = defineStore("todos", () => {
       todos.value[index].status === "done" ? "pending" : "done";
   };
 
-  return { todos, getTask, initTask, addTask, removeTask, setStatus };
+  const sortTaskByStatus = (status: string) => {
+    if (status == "done") {
+      todos.value.sort(function (a, b) {
+        if (a.status < b.status) {
+          return -1;
+        }
+        if (a.status > b.status) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+    if (status == "pending") {
+      todos.value.sort(function (a, b) {
+        if (a.status > b.status) {
+          return -1;
+        }
+        if (a.status < b.status) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+  };
+
+  return {
+    todos,
+    getTask,
+    initTask,
+    addTask,
+    removeTask,
+    setStatus,
+    sortTaskByStatus,
+  };
 });

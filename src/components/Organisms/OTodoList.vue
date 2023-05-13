@@ -3,7 +3,11 @@
     <ACard>
       <MTodosInput v-model="todo" @on:enter="addTask" @on:click="addTask" />
       <MTodosFilter />
-      <MTodosTasks />
+      <MTodosTasks
+        :todos="todos"
+        @on:label-click="toggleStatus"
+        @on:remove-click="removeTask"
+      />
     </ACard>
   </div>
 </template>
@@ -13,18 +17,32 @@ import MTodosFilter from "../Molecules/MTodosFilter.vue";
 import MTodosInput from "../Molecules/MTodosInput.vue";
 import MTodosTasks from "../Molecules/MTodosTasks.vue";
 import ACard from "../Atoms/ACard.vue";
-import type { ITask } from "@/models/task";
 
+import type { ITask } from "@/models/task";
 import { useTodosStore } from "@/stores/todos";
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
+
 const todo = ref("");
 const store = useTodosStore();
-function addTask(): void {
+const { todos } = storeToRefs(store);
+const addTask = (): void => {
   const new_task: ITask = {
+    id: todos.value.length + 1,
     content: todo.value,
-    status: "uncompleted",
-    is_removable: false,
+    status: "pending",
   };
+  todo.value = "";
   store.addTask(new_task);
-}
+};
+
+const removeTask = (id: number): void => {
+  store.removeTask(id);
+};
+
+const toggleStatus = (id: number): void => {
+  store.setStatus(id);
+};
+
+store.initTask();
 </script>

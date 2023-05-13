@@ -3,42 +3,44 @@ import { defineStore } from "pinia";
 import type { ITask } from "@/models/task";
 
 export const useTodosStore = defineStore("todos", () => {
-  const todos = ref<ITask[]>();
+  const todos = ref<ITask[]>([]);
   const getTask = computed(() => todos.value);
-
   const initTask = () => {
-    setTimeout(() => {
-      todos.value?.push(
-        {
-          content: "Mandi",
-          status: "completed",
-          is_removable: true,
-        },
-
-        {
-          content: "Makan",
-          status: "uncompleted",
-          is_removable: false,
-        },
-        {
-          content: "Bersih Bersih",
-          status: "completed",
-          is_removable: true,
-        },
-        {
-          content: "Cuci Baju",
-          status: "uncompleted",
-          is_removable: false,
-        }
-      );
-    }, 1000);
+    todos.value?.push(
+      {
+        id: 1,
+        content: "Mandi",
+        status: "done",
+      },
+      {
+        id: 2,
+        content: "Makan",
+        status: "pending",
+      },
+      {
+        id: 3,
+        content: "Bersih Bersih",
+        status: "pending",
+      },
+      {
+        id: 4,
+        content: "Cuci Baju",
+        status: "done",
+      }
+    );
   };
 
   const addTask = (arg: ITask) => {
     todos.value?.push(arg);
   };
-  const removeTask = (index: number) => {
-    todos.value?.splice(index, 1);
+  const removeTask = (id: number) => {
+    todos.value = todos.value.filter((todo) => todo.id !== id);
   };
-  return { todos, initTask, getTask, addTask, removeTask };
+  const setStatus = (id: number) => {
+    const index = todos.value.findIndex((todo) => todo.id === id);
+    todos.value[index].status =
+      todos.value[index].status === "done" ? "pending" : "done";
+  };
+
+  return { todos, getTask, initTask, addTask, removeTask, setStatus };
 });

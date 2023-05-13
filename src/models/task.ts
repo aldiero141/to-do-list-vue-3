@@ -1,5 +1,5 @@
 export interface ITask {
+  id: number;
   content: string;
   status: string;
-  is_removable: boolean;
 }

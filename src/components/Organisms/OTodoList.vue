@@ -1,10 +1,20 @@
 <template>
-  <div class="flex flex-col w-[40vw] h-screen bg-gray-50 justify-center p-8">
+  <div class="flex flex-col w-[50vw] h-screen bg-gray-50 justify-center p-8">
     <ACard>
       <MTodosInput v-model="todo" @on:enter="addTask" @on:click="addTask" />
-      <MTodosFilter :statuses="status" @on:change="sortTask" />
+      <MTodosFilter
+        :statuses="status"
+        @on:sort="sortTask"
+        @on:filter="filterTask"
+      />
       <MTodosTasks
-        :todos="todos"
+        :todos="
+          filter == 'done'
+            ? store.getDoneTask
+            : filter == 'pending'
+            ? store.getPendingTask
+            : todos
+        "
         @on:label-click="toggleStatus"
         @on:remove-click="removeTask"
       />
@@ -26,8 +36,8 @@ import { storeToRefs } from "pinia";
 const todo = ref("");
 
 const store = useTodosStore();
-const status = ["done", "pending"];
-const { todos } = storeToRefs(store);
+const status = ["done", "pending", "reset"];
+const { todos, filter } = storeToRefs(store);
 const addTask = (): void => {
   const new_task: ITask = {
     id: todos.value.length + 1,
@@ -48,6 +58,9 @@ const toggleStatus = (id: number): void => {
 
 const sortTask = (status: string) => {
   store.sortTaskByStatus(status);
+};
+const filterTask = (status: string) => {
+  store.filterTaskByStatus(status);
 };
 
 store.initTask();

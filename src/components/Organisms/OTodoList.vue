@@ -39,6 +39,7 @@ const store = useTodosStore();
 const status = ["done", "pending", "reset"];
 const { todos, filter } = storeToRefs(store);
 const addTask = (): void => {
+  if (todo.value == "") return;
   const new_task: ITask = {
     id: todos.value.length + 1,
     content: todo.value,
